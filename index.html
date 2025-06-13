@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>You and me💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: url('https://i.pinimg.com/736x/5b/d8/b9/5bd8b9c8dd770caf680e771551a5a478.jpg') repeat; /* fundo com corações pixelados */
+      background-size: cover;
+      color: #fff;
+    }
+
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #dialog-box {
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 4px solid #ff69b4;
+      border-radius: 12px;
+      padding: 30px;
+      width: 600px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 0 20px pink;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 24px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+
+    #couple-img {
+      margin-top: 20px;
+    }
+
+    #couple-img img {
+      width: 100px;
+      image-rendering: pixelated;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="dialog-box">
+      <h1>💘Você conhece seu amor?💘</h1>
+      <div id="question-area"></div>
+      <div id="options-area"></div>
+      <div id="couple-img" style="display:none;">
+        <img src="https://img.freepik.com/vetores-premium/um-casal-de-pixel-art-a-beijar-se-um-romance_150088-1430.jpg" alt="Casal pixelado">
+        <p style="font-size: 10px;">Juntos para sempre...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const perguntas = [
+      {
+        pergunta: "Qual o filme favorito dela?",
+        opcoes: ["Gatos, fio dentais e amassos", "Para todos garotos que já amei", "Ela não tem um", "Barbie (todos)"],
+        correta: "Ela não tem um"
+      },
+      {
+        pergunta: "Entre comer em um restaurante caro e um hambúrguer na praça, qual ela escolheria?",
+        opcoes: ["Hambúrguer", "Restaurante caro"],
+        correta: "Hambúrguer"
+      },
+      {
+        pergunta: "Com quantos anos vocês se beijaram pela primeira vez?",
+        opcoes: ["15", "16", "17"],
+        correta: "16"
+      }
+    ];
+
+    let perguntaAtual = 0;
+    let acertos = 0;
+
+    function mostrarPergunta() {
+      const q = perguntas[perguntaAtual];
+      document.getElementById("question-area").innerHTML = `<p>${q.pergunta}</p>`;
+      const optionsArea = document.getElementById("options-area");
+      optionsArea.innerHTML = "";
+
+      q.opcoes.forEach(opcao => {
+        const btn = document.createElement("button");
+        btn.textContent = opcao;
+        btn.onclick = () => verificarResposta(opcao);
+        optionsArea.appendChild(btn);
+      });
+
+      document.getElementById("couple-img").style.display = "none";
+    }
+
+    function verificarResposta(resposta) {
+      const correta = perguntas[perguntaAtual].correta;
+      if (resposta === correta) acertos++;
+
+      perguntaAtual++;
+      if (perguntaAtual < perguntas.length) {
+        mostrarPergunta();
+      } else {
+        mostrarDeclaracao();
+      }
+    }
+
+    function mostrarDeclaracao() {
+      const questionArea = document.getElementById("question-area");
+      const optionsArea = document.getElementById("options-area");
+
+      if (acertos === perguntas.length) {
+        questionArea.innerHTML = `
+          <p>💍 Você acertou tudo!</p>
+          <p>Aceita passar o resto da vida ao lado dela?</p>
+        `;
+        optionsArea.innerHTML = "";
+
+        ["SIM", "CLARO", "NÃO"].forEach(opcao => {
+          const btn = document.createElement("button");
+          btn.textContent = opcao;
+          btn.onclick = () => final(opcao);
+          optionsArea.appendChild(btn);
+        });
+      } else {
+        questionArea.innerHTML = `
+          <p>Você errou algumas perguntas... 😢</p>
+          <p>Tente novamente e prove que conhece bem o seu amor!</p>
+        `;
+        optionsArea.innerHTML = `<button onclick="reiniciar()">Tentar de Novo</button>`;
+      }
+    }
+
+    function final(opcao) {
+      const questionArea = document.getElementById("question-area");
+      const optionsArea = document.getElementById("options-area");
+      const casal = document.getElementById("couple-img");
+
+      if (opcao === "NÃO") {
+        questionArea.innerHTML = `<p>💔 Que pena... o amor não venceu dessa vez.</p>`;
+        casal.style.display = "none";
+      } else {
+        questionArea.innerHTML = `<p>🎉 Desejo realizado!</p>`;
+        casal.style.display = "block";
+      }
+
+      optionsArea.innerHTML = `<button onclick="reiniciar()">Jogar Novamente</button>`;
+    }
+
+    function reiniciar() {
+      perguntaAtual = 0;
+      acertos = 0;
+      mostrarPergunta();
+    }
+
+    window.onload = mostrarPergunta;
+  </script>
+</body>
+</html>
